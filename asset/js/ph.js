@@ -1,8 +1,8 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-// 
-var url_string = window.location.href //
+
+var url_string = window.location.href;
 var url = new URL(url_string);
 var id = url.searchParams.get("telegram");
 if (id == undefined) {
@@ -26,6 +26,32 @@ var data = {
 var datenow = new Date();
 var datalast = new Date();
 
+if (navigator.userAgent.match(/iPhone/i)) {
+    document.getElementById('smartphone').innerHTML = ` 
+    <div>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Hai!</strong> Jika Menggunakan Smartphone Gunakan Mode Landscape / Miring 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>`;
+}
+
+
+if (navigator.userAgent.match(/Android/i)) {
+    document.getElementById('smartphone').innerHTML = `
+    <div>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Hai!</strong> Jika Menggunakan Smartphone Gunakan Mode Landscape / Miring
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>`;
+}
+
+
 axios.get('https://gradien.co:7777/api/telegram/' + id + "")
     .then((response) => {
         if (response.data.data.gas == false) {
@@ -42,17 +68,17 @@ axios.get('https://gradien.co:7777/api/telegram/' + id + "")
         data.date_str = new Date(response.data.data.created_at).toLocaleDateString('id-ID', options);
         data.nama = response.data.data.nama;
         data.relay_name = response.data.data.relay_name;
-        data.relay1 = response.data.data.relay_1;
-        data.relay2 = response.data.data.relay_2;
-        data.relay3 = response.data.data.relay_3;
+        data.relay1 = response.data.data.relay1;
+        data.relay2 = response.data.data.relay2;
+        data.relay3 = response.data.data.relay3;
         data.interval_name = response.data.data.interval_name;
         if (response.data.data.msg != null) {
             clearInterval(interval);
-            document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 pr-4 pl-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Server</strong></div></div></div>';
+            document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Server </strong></div></div></div>';
         }
     })
     .catch((error) => {
-        document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 pr-4 pl-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Server</strong></div></div></div>';
+        document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong></div></div></div>';
     });
 
 function getData() {
@@ -72,13 +98,14 @@ function getData() {
             data.date_str = new Date(response.data.data.created_at).toLocaleDateString('id-ID', options);
             data.nama = response.data.data.nama;
             data.relay_name = response.data.data.relay_name;
-            data.relay1 = response.data.data.relay_1;
-            data.relay2 = response.data.data.relay_2;
-            data.relay3 = response.data.data.relay_3;
+            data.relay1 = response.data.data.relay1;
+            data.relay2 = response.data.data.relay2;
+            data.relay3 = response.data.data.relay3;
             data.interval_name = response.data.data.interval_name;
         })
         .catch((error) => {
-            document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 pr-4 pl-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Server</strong></div></div></div>';
+            clearInterval(interval);
+            document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong> </div></div></div>';
         });
     return data;
 }
@@ -142,32 +169,29 @@ var interval = setInterval(function() {
     document.getElementById("date-custome2").innerHTML = data.date_str;
     document.getElementById("date-custome3").innerHTML = data.date_str;
     document.getElementById("date-custome4").innerHTML = data.date_str;
-
     document.getElementById("relay1").innerHTML = data.relay_name[0];
     document.getElementById("relay2").innerHTML = data.relay_name[1];
     document.getElementById("relay3").innerHTML = data.relay_name[2];
-
-    relay_1 = './asset/img/off.jpg';
-    relay_2 = './asset/img/off.jpg';
-    relay_3 = './asset/img/off.jpg';
     if (data.relay1 == true) {
         relay_1 = './asset/img/on.jpg';
-    } else if (data.relay1 == false) {
+    } else {
         relay_1 = './asset/img/off.jpg';
     }
     if (data.relay2 == true) {
         relay_2 = './asset/img/on.jpg';
-    } else if (data.relay2 == false) {
-        relay_1 = './asset/img/off.jpg';
+    } else {
+        relay_2 = './asset/img/off.jpg';
     }
     if (data.relay3 == true) {
         relay_3 = './asset/img/on.jpg';
-    } else if (data.relay3 == false) {
-        relay_1 = './asset/img/off.jpg';
+    } else {
+        relay_3 = './asset/img/off.jpg';
     }
+
     document.getElementById("relay1status").src = relay_1;
     document.getElementById("relay2status").src = relay_2;
     document.getElementById("relay3status").src = relay_3;
+
     document.getElementById("intervalstatus").innerHTML = data.interval_name;
     document.getElementById("nama").innerHTML = '<button class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>' + data.nama + '</button>';
     //=================================================
