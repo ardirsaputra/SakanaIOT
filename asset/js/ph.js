@@ -1,12 +1,11 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 var url_string = window.location.href;
 var url = new URL(url_string);
 var id = url.searchParams.get("telegram");
 if (id == undefined) {
-    id = '-374817875';
+    id = '-1001242504941';
 }
 
 var data = {
@@ -26,11 +25,26 @@ var data = {
 var datenow = new Date();
 var datalast = new Date();
 
+var time_kolam = 100;
+var time_ph = 100;
+var time_suhu = 100;
+var time_gas = 100;
+
+var selectInputKolam = document.getElementById("time-kolam");
+var selectInputPh = document.getElementById("time-ph");
+var selectInputSuhu = document.getElementById("time-suhu");
+var selectInputGas = document.getElementById("time-gas");
+
+time_kolam = selectInputKolam.options[selectInputKolam.selectedIndex].value;
+time_ph = selectInputPh.options[selectInputPh.selectedIndex].value;
+time_suhu = selectInputSuhu.options[selectInputSuhu.selectedIndex].value;
+time_gas = selectInputGas.options[selectInputGas.selectedIndex].value;
+
 if (navigator.userAgent.match(/iPhone/i)) {
     document.getElementById('smartphone').innerHTML = ` 
     <div>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Hai!</strong> Jika Menggunakan Smartphone Gunakan Mode Landscape / Miring 
+            <strong>Hai!</strong> Anda Menggunakan IPhone Sebaiknya Mengunakan Mode Landscape / Miring 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -43,7 +57,7 @@ if (navigator.userAgent.match(/Android/i)) {
     document.getElementById('smartphone').innerHTML = `
     <div>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Hai!</strong> Jika Menggunakan Smartphone Gunakan Mode Landscape / Miring
+            <strong>Hai!</strong> Anda Menggunakan Android Sebaiknya mengunakan Mode Landscape / Miring
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -51,9 +65,20 @@ if (navigator.userAgent.match(/Android/i)) {
     </div>`;
 }
 
+function hideDisplay() {
+    document.getElementById("app").style.display = "none";
+    document.getElementById("error").style.display = "block";
+}
+
+function showDisplay() {
+    document.getElementById("app").style.display = "block";
+    document.getElementById("error").style.display = "none";
+}
+
 
 axios.get('https://gradien.co:7777/api/telegram/' + id + "")
     .then((response) => {
+        showDisplay();
         if (response.data.data.gas == false) {
             temp_gas = 0;
         } else {
@@ -78,12 +103,14 @@ axios.get('https://gradien.co:7777/api/telegram/' + id + "")
         }
     })
     .catch((error) => {
-        document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong></div></div></div>';
+        hideDisplay();
+        document.getElementById('error').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong></div></div></div>';
     });
 
 function getData() {
     axios.get('https://gradien.co:7777/api/telegram/' + id + "")
         .then((response) => {
+            showDisplay();
             if (response.data.data.gas == false) {
                 temp_gas = 0;
             } else {
@@ -104,8 +131,8 @@ function getData() {
             data.interval_name = response.data.data.interval_name;
         })
         .catch((error) => {
-            clearInterval(interval);
-            document.getElementById('app').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong> </div></div></div>';
+            hideDisplay();
+            document.getElementById('error').innerHTML = ' <div class="pt-4 pl-2 pr-2 pb-4"></div><div class="col-12"><div class="pt-4 text-center"><div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Menyambung Ke Internet</strong></div></div></div>';
         });
     return data;
 }
@@ -158,12 +185,20 @@ Plotly.plot('custome', [{
         //,x: [data.date]
 }], { title: "Grafik Gabungan" });
 
-var cnt = 0;
+var cnt_kolam = 0;
+var cnt_suhu = 0;
+var cnt_ph = 0;
+var cnt_gas = 0;
+
 var relay_1 = './asset/img/off.jpg';
 var relay_2 = './asset/img/off.jpg';
 var relay_3 = './asset/img/off.jpg';
 
 var interval = setInterval(function() {
+    time_kolam = selectInputKolam.options[selectInputKolam.selectedIndex].value;
+    time_ph = selectInputPh.options[selectInputPh.selectedIndex].value;
+    time_suhu = selectInputSuhu.options[selectInputSuhu.selectedIndex].value;
+    time_gas = selectInputGas.options[selectInputGas.selectedIndex].value;
     data = getData();
     document.getElementById("date-custome1").innerHTML = data.date_str;
     document.getElementById("date-custome2").innerHTML = data.date_str;
@@ -194,8 +229,6 @@ var interval = setInterval(function() {
 
     document.getElementById("intervalstatus").innerHTML = data.interval_name;
     document.getElementById("nama").innerHTML = '<button class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>' + data.nama + '</button>';
-    //=================================================
-    // Hendeling When Data is Stack / Data not update;
     datanow = data.date;
     if (datanow == datalast) {
         document.getElementById('notif').innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Data Sensor Berhenti</strong> pada ' + data.date_str + '</div>';
@@ -203,19 +236,12 @@ var interval = setInterval(function() {
         document.getElementById('notif').innerHTML = '';
     }
     datalast = datanow;
-    //==================================================
     Plotly.extendTraces('custome', {
         y: [
-                [data.ph],
-                [data.suhu],
-                [data.gas]
-            ]
-            // ,x: [
-            //     [data.date],
-            //     [data.date],
-            //     [data.date]
-            // ]
-
+            [data.ph],
+            [data.suhu],
+            [data.gas]
+        ]
     }, [0, 1, 2]);
 
     Plotly.extendTraces('ph', {
@@ -232,34 +258,64 @@ var interval = setInterval(function() {
 
     Plotly.extendTraces('gas', {
         y: [
-                [data.gas]
-            ]
-            // ,x: [
-            //     [data.date]
-            // ]
+            [data.gas]
+        ]
     }, [0]);
-    cnt++;
-    if (cnt > 500) {
-        Plotly.relayout('ph', {
-            xaxis: {
-                range: [cnt - 500, cnt]
-            }
-        });
+    cnt_gas++;
+    cnt_kolam++;
+    cnt_ph++;
+    cnt_suhu++;
+    if (cnt_suhu > time_suhu) {
         Plotly.relayout('suhu', {
             xaxis: {
-                range: [cnt - 500, cnt]
+                range: [cnt_suhu - time_suhu, cnt_suhu]
             }
         });
-        Plotly.relayout('gas', {
+    } else {
+        Plotly.relayout('suhu', {
             xaxis: {
-                range: [cnt - 500, cnt]
-            }
-        });
-        Plotly.relayout('custome', {
-            xaxis: {
-                range: [cnt - 500, cnt]
+                range: [0, cnt_suhu]
             }
         });
     }
+    if (cnt_ph > time_ph) {
+        Plotly.relayout('ph', {
+            xaxis: {
+                range: [cnt_ph - time_ph, cnt_ph]
+            }
+        });
+    } else {
+        Plotly.relayout('ph', {
+            xaxis: {
+                range: [0, cnt_ph]
+            }
+        });
+    }
+    if (cnt_gas > time_gas) {
+        Plotly.relayout('gas', {
+            xaxis: {
+                range: [cnt_gas - time_gas, cnt_gas]
+            }
+        });
+    } else {
+        Plotly.relayout('custome', {
+            xaxis: {
+                range: [0, cnt_gas]
+            }
+        });
+    }
+    if (cnt_kolam > time_kolam) {
 
+        Plotly.relayout('custome', {
+            xaxis: {
+                range: [cnt_kolam - time_kolam, cnt_kolam]
+            }
+        });
+    } else {
+        Plotly.relayout('custome', {
+            xaxis: {
+                range: [0, cnt_kolam]
+            }
+        });
+    }
 }, 1000);

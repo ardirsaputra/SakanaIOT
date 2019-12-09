@@ -14,7 +14,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js" integrity="sha256-6izTmaU3LMinmbxDDcolK51XCh0s0TTREyeZXq335Nc=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js" integrity="sha256-S1J4GVHHDMiirir9qsXWc8ZWw74PHHafpsHp5PXtjTs=" crossorigin="anonymous"></script>
     <style src="./asset/css/style.css"></style>
-
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -27,7 +26,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#costumeTitle">Kolam <span class="sr-only"></span></a>
+                    <a class="nav-link" href="#customeTitle">Kolam <span class="sr-only"></span></a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#phTitle">PH <span class="sr-only"></span></a>
@@ -95,9 +94,24 @@
                 <div class="col-lg-12 col-md-12 col-sm-12" id="notif"></div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="">
-                        <div class="card shadow bg-info text-white " id="customeTitle">
+                        <div class="card shadow rounded bg-info text-white " id="customeTitle">
                             <div class="card-header text-center">
-                                <strong>Kolam</strong>
+                                <strong class="p-2">Kolam</strong>
+                                <select id="time-kolam" class="float-right btn text-white">
+                                    <option value="10" class="bg-info">10 Detik</option>
+                                    <option value="30"class="bg-info">30 Detik</option>
+                                    <option value="60" class="bg-info">1 Menit</option>
+                                    <option value="300" class="bg-info" >5 Menit</option>
+                                    <option value="600" class="bg-info">10 Menit</option>
+                                    <option value="1200" class="bg-info">20 Menit</option>
+                                    <option value="1800" class="bg-info">30 Menit</option>
+                                    <option value="3600" class="bg-info"selected="selected">1 Jam</option>
+                                    <option value="7200" class="bg-info">2 Jam</option>
+                                    <option value="10800" class="bg-info">3 Jam</option>
+                                    <option value="21600" class="bg-info">6 Jam</option>
+                                    <option value="43200" class="bg-info">12 Jam</option>
+                                    <option value="86400" class="bg-info">1 Hari</option>
+                                </select>
                             </div>
                             <div class=" ">
                                 <div id="custome"></div>
@@ -113,7 +127,22 @@
                     <div class="pt-2 pb-2">
                         <div class="card shadow bg-success text-white" id="phTitle">
                             <div class="card-header text-center">
-                                <strong>Sensor PH</strong>
+                                <strong class="p-2">Sensor PH</strong>
+                                <select id="time-ph" class="float-right btn text-white">
+                                        <option value="10" class="bg-success">10 Detik</option>
+                                        <option value="30"class="bg-success">30 Detik</option>
+                                        <option value="60" class="bg-success">1 Menit</option>
+                                        <option value="300" class="bg-success">5 Menit</option>
+                                        <option value="600" class="bg-success">10 Menit</option>
+                                        <option value="1200" class="bg-success">20 Menit</option>
+                                        <option value="1800" class="bg-success">30 Menit</option>
+                                        <option value="3600" class="bg-success" selected="selected">1 Jam</option>
+                                        <option value="7200" class="bg-success">2 Jam</option>
+                                        <option value="10800" class="bg-success">3 Jam</option>
+                                        <option value="21600" class="bg-success">6 Jam</option>
+                                        <option value="43200" class="bg-success">12 Jam</option>
+                                        <option value="86400" class="bg-success">1 Hari</option>
+                                    </select>
                             </div>
                             <div class="">
                                 <div id="ph"></div>
@@ -129,7 +158,22 @@
                     <div class="pt-2 pb-2">
                         <div class="card shadow bg-warning " id="suhuTitle">
                             <div class="card-header text-center">
-                                <strong> Sensor Suhu</strong>
+                                <strong class="p-2"> Sensor Suhu</strong>
+                                <select id="time-suhu" class="float-right btn">
+                                        <option value="10" class="bg-warning">10 Detik</option>
+                                        <option value="30"class="bg-warning">30 Detik</option>
+                                        <option value="60" class="bg-warning">1 Menit</option>
+                                        <option value="300" class="bg-warning">5 Menit</option>
+                                        <option value="600" class="bg-warning">10 Menit</option>
+                                        <option value="1200" class="bg-warning">20 Menit</option>
+                                        <option value="1800" class="bg-warning">30 Menit</option>
+                                        <option value="3600" class="bg-warning" selected="selected">1 Jam</option>
+                                        <option value="7200" class="bg-warning">2 Jam</option>
+                                        <option value="10800" class="bg-warning">3 Jam</option>
+                                        <option value="21600" class="bg-warning">6 Jam</option>
+                                        <option value="43200" class="bg-warning">12 Jam</option>
+                                        <option value="86400" class="bg-warning">1 Hari</option>
+                                    </select>
                             </div>
                             <div class="">
                                 <div id="suhu"></div>
@@ -145,7 +189,22 @@
                     <div class="pt-2 pb-2">
                         <div class="card text-white bg-danger shadow " id="gasTitle">
                             <div class="card-header text-center">
-                                <strong> Sensor Gas Belerang</strong>
+                                <strong class="p-2"> Sensor Gas Belerang</strong>
+                                <select id="time-gas" class="float-right btn text-white">
+                                        <option value="10" class="bg-info">10 Detik</option>
+                                        <option value="30"class="bg-info">30 Detik</option>
+                                        <option value="60" class="bg-info">1 Menit</option>
+                                        <option value="300" class="bg-info" >5 Menit</option>
+                                        <option value="600" class="bg-info">10 Menit</option>
+                                        <option value="1200" class="bg-info">20 Menit</option>
+                                        <option value="1800" class="bg-info">30 Menit</option>
+                                        <option value="3600" class="bg-info" selected="selected">1 Jam</option>
+                                        <option value="7200" class="bg-info">2 Jam</option>
+                                        <option value="10800" class="bg-info">3 Jam</option>
+                                        <option value="21600" class="bg-info">6 Jam</option>
+                                        <option value="43200" class="bg-info">12 Jam</option>
+                                        <option value="86400" class="bg-info">1 Hari</option>
+                                    </select>
                             </div>
                             <div class="">
                                 <div id="gas"></div>
@@ -159,7 +218,9 @@
                 </div>
             </div>
         </div>
+        <div class="row" id="error">
 
+        </div>
         <footer class="footer py-3 shadow">
             <div class="container text-center">
                 <span class="text-muted ">
